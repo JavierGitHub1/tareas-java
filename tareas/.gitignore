@@ -1,42 +1,19 @@
-HELP.md
+# --- Carpetas de Compilación ---
 target/
-.mvn/wrapper/maven-wrapper.jar
-!**/src/main/**/target/
-!**/src/test/**/target/
+*.class
 
-### STS ###
-.apt_generated
-.classpath
-.factorypath
-.project
-.settings
-.springBeans
-.sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
+# --- IDEs ---
+.idea/
 *.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
-build/
-!**/src/main/**/build/
-!**/src/test/**/build/
-
-### VS Code ###
+.classpath
+.project
+.settings/
 .vscode/
 
-
-# --- Base de Datos Local (VITAL)
-postgres-data/
+# --- Base de Datos (MUY IMPORTANTE) ---
 data/
+postgres-data/
 
-# --- Otros ---
+# --- Sistema ---
 MATA_DOCKER.bat
 .DS_Store
