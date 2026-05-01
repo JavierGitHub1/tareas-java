@@ -1,0 +1,41 @@
+services:
+  db:
+    image: postgres:15
+    container_name: tareas_db
+    environment:
+      POSTGRES_USER: javier
+      POSTGRES_PASSWORD: admin123
+      POSTGRES_DB: tareasdb
+      TZ: UTC
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - tareas-net
+    # --- ESTO ES LO NUEVO: El chequeo de salud ---
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U javier -d tareasdb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  app:
+    build: .
+    container_name: tareas-app
+    ports:
+      - "8080:8080"
+    environment:
+      - DB_HOST=db
+      - DB_USER=javier
+      - DB_PASS=admin123
+      - SPRING_PROFILES_ACTIVE=dev # En mayúsculas es mejor
+    depends_on:
+      db:
+        condition: service_healthy # <--- Obliga a esperar al chequeo de arriba
+    networks:
+      - tareas-net
+
+networks:
+  tareas-net:
+    driver: bridgegit ini
