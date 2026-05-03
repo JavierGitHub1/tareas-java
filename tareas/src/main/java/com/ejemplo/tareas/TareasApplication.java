@@ -32,17 +32,34 @@ public class TareasApplication {
 
 
 	@Bean
-	CommandLineRunner initDatabase(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
+	public CommandLineRunner initDatabase(UsuarioRepository usuarioRepository, PasswordEncoder passwordEncoder) {
 		return args -> {
-			if (usuarioRepository.findByNombre("Javier").isEmpty()) {
-				Usuario javier = new Usuario();
-				javier.setNombre("Javier");
-				javier.setEmail("javier@mail.com");
-				// Usamos el passwordEncoder para que la clave sea válida para el portero
-				javier.setPassword(passwordEncoder.encode("admin123"));
-				usuarioRepository.save(javier);
-				System.out.println("✅ Usuario 'Javier' creado automáticamente para el test.");
+			// 1. Leemos la clave de la variable de entorno
+			String adminPass = System.getenv("ADMIN_PASSWORD");
+
+			// 2. Validación de Senior: Si te olvidás de cargarla en Railway,
+			// le ponemos una de emergencia para que la app no explote, pero te avisamos.
+			if (adminPass == null || adminPass.isBlank()) {
+				System.err.println("⚠️ ADVERTENCIA: La variable ADMIN_PASSWORD no está cargada. Usando clave por defecto.");
+				adminPass = "clave_de_emergencia_123";
 			}
+
+			// 3. Buscamos a Javier. Si existe lo traemos, si no, creamos uno nuevo.
+			Usuario javier = usuarioRepository.findByNombre("Javier")
+					.orElseGet(() -> {
+						Usuario nuevo = new Usuario();
+						nuevo.setNombre("Javier");
+						nuevo.setEmail("javier@mail.com");
+						return nuevo;
+					});
+
+			// 4. Seteamos la clave (siempre se va a actualizar al arrancar)
+			javier.setPassword(passwordEncoder.encode(adminPass));
+
+			// 5. Guardamos (JPA hace el INSERT o el UPDATE solo)
+			usuarioRepository.save(javier);
+
+			System.out.println("🚀 CONFIGURACIÓN DE SEGURIDAD: Usuario 'Javier' sincronizado con éxito.");
 		};
 	}
 
