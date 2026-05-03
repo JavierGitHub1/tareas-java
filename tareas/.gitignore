@@ -1,19 +1,15 @@
-# --- Carpetas de Compilación ---
-target/
-*.class
+# --- Escudo Total para cualquier carpeta ---
+**/target/
+**/.idea/
+**/.settings/
+**/.vscode/
+**/data/
+**/postgres-data/
 
-# --- IDEs ---
-.idea/
-*.iml
-.classpath
-.project
-.settings/
-.vscode/
-
-# --- Base de Datos (MUY IMPORTANTE) ---
-data/
-postgres-data/
-
-# --- Sistema ---
-MATA_DOCKER.bat
-.DS_Store
+# --- Escudo Total para archivos sueltos ---
+**/*.class
+**/*.iml
+**/.classpath
+**/.project
+**/MATA_DOCKER.bat
+**/.DS_Store
